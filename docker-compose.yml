@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  psqlDB:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: AuthDB
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - psql_db_volume:/var/lib/postgresql/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: express-app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - psqlDB
+    volumes:
+      - ./src:/app/src
+volumes:
+  psql_db_volume:
